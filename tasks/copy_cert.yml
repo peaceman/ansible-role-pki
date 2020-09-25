@@ -1,0 +1,5 @@
+---
+- name: Copy certificate file
+  copy:
+    src: "{{ pki_certs_dir }}/{{ src }}"
+    dest: "{{ dest }}"

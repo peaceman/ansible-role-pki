@@ -1,0 +1,5 @@
+---
+- name: Copy CA certificate file
+  copy:
+    src: "{{ pki_ca_dir }}/ca.pem"
+    dest: "{{ dest }}"
