@@ -1,5 +1,6 @@
 galaxy_info:
-  author: pki
+  role_name: pki
+  author: nixalio@gmail.com
   description: Internal PKI management
   company: n2305
 
