@@ -3,3 +3,6 @@
   copy:
     src: "{{ pki_certs_dir }}/{{ src }}"
     dest: "{{ dest }}"
+    owner: "{{ owner | default(omit) }}"
+    group: "{{ group | default(omit) }}"
+    mode: "{{ mode | default(omit) }}"

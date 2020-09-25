@@ -3,3 +3,6 @@
   copy:
     src: "{{ pki_ca_dir }}/ca.pem"
     dest: "{{ dest }}"
+    owner: "{{ owner | default(omit) }}"
+    group: "{{ group | default(omit) }}"
+    mode: "{{ mode | default(omit) }}"
