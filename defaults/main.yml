@@ -1,0 +1,9 @@
+---
+# defaults file for peaceman.pki
+
+# used as identifier to differentiate between multiple managed certificate authorities
+pki_name: main
+
+# settings for private key generation
+pki_key_type: ECC
+pki_key_curve: secp384r1

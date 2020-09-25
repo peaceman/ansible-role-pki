@@ -1,0 +1,50 @@
+---
+- name: Ensure existing client certs directory directory
+  file:
+    path: "{{ pki_certs_dir }}"
+    state: directory
+
+- name: Create {{ cert_name }} certificate private key
+  openssl_privatekey:
+    backup: yes
+    type: "{{ pki_key_type }}"
+    curve: "{{ pki_key_curve }}"
+    path: "{{ pki_certs_dir }}/{{ cert_name }}-key.pem"
+
+- name: Create pkcs8 version of {{ cert_name }} private key
+  command:
+    cmd: >
+      openssl pkcs8
+      -in "{{ pki_certs_dir }}/{{ cert_name }}-key.pem"
+      -topk8
+      -nocrypt
+      -out "{{ pki_certs_dir }}/{{ cert_name }}-key.p8"
+
+- name: Create {{ cert_name }} cert CSR
+  openssl_csr:
+    path: "{{ pki_certs_dir }}/{{ cert_name }}.csr"
+    privatekey_path: "{{ pki_certs_dir }}/{{ cert_name }}-key.pem"
+    basic_constraints:
+      - "CA:FALSE"
+    basic_constraints_critical: yes
+    key_usage:
+      - keyEncipherment
+      - digitalSignature
+    key_usage_critical: yes
+    extended_key_usage:
+      - serverAuth
+      - clientAuth
+    create_subject_key_identifier: yes
+    subject: "{{ cert_subject | default({'CN': cert_name}) }}"
+    subject_alt_name: "{{ cert_san | default(omit) }}"
+
+- name: Create {{ cert_name }} certificate
+  openssl_certificate:
+    provider: ownca
+    ownca_path: "{{ pki_ca_dir }}/ca.pem"
+    ownca_privatekey_path: "{{ pki_ca_dir }}/ca-key.pem"
+    ownca_create_subject_key_identifier: always_create
+    path: "{{ pki_certs_dir }}/{{ cert_name }}.pem"
+    privatekey_path: "{{ pki_certs_dir }}/{{ cert_name }}-key.pem"
+    csr_path: "{{ pki_certs_dir }}/{{ cert_name }}.csr"
+    backup: yes

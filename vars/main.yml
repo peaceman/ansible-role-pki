@@ -1,0 +1,4 @@
+---
+# vars file for peaceman.pki
+pki_ca_dir: "{{ pki_local_data_dir | mandatory }}/{{ pki_name }}/ca"
+pki_certs_dir: "{{ pki_local_data_dir | mandatory }}/{{ pki_name }}/certs"
